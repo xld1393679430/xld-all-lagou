@@ -97,7 +97,7 @@ class Alert extends TinyReact.Component {
 // 5, 更新类组件(组件是否是同一个组件)
 TinyReact.render(<Alert title="Hello Alert" />, root);
 setTimeout(() => {
-  // TinyReact.render(<Alert title="Hello Alert222" />, root);
+  TinyReact.render(<Alert title="Hello Alert222" />, root);
 
-  TinyReact.render(<Demo />, root);
+  // TinyReact.render(<Demo />, root);
 }, 2000);

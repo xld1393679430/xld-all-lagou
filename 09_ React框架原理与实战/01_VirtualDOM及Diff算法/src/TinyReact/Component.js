@@ -20,4 +20,8 @@ export default class Component {
 	getDom() {
 		return this._dom
 	}
+
+	updateProps(props) {
+		this.props = props
+	}
 }
