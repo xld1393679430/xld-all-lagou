@@ -41,10 +41,10 @@ const virtualDOM2 = (
 // TinyReact.render(virtualDOM, root);
 
 // 更新html
-TinyReact.render(virtualDOM, root);
-setTimeout(() => {
-  TinyReact.render(virtualDOM2, root);
-}, 2000);
+// TinyReact.render(virtualDOM, root);
+// setTimeout(() => {
+//   TinyReact.render(virtualDOM2, root);
+// }, 2000);
 
 function Demo() {
   return <div>Hello Demo</div>;
@@ -65,13 +65,32 @@ function Head(props) {
 class Alert extends TinyReact.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      message: "default title"
+    }
+    this.changeMessage = this.changeMessage.bind(this)
+  }
+
+  changeMessage() {
+    this.setState({
+      message: "修改后的message"
+    })
   }
 
   render() {
     const { title } = this.props;
-    return <div>{title}</div>;
+    const { message } = this.state
+
+    console.log(message, 8888);
+    return (
+      <div>
+        <div>title: {title}</div>
+        <div>message: { message }</div>
+        <button onClick={this.changeMessage}>改变mssage</button>
+      </div>
+    );
   }
 }
 
 // 渲染类组件
-// TinyReact.render(<Alert title="Hello Alert" />, root);
+TinyReact.render(<Alert title="Hello Alert" />, root);
