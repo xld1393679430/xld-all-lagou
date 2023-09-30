@@ -17,9 +17,9 @@ export default class Component {
 
   setState(state) {
     this.state = Object.assign({}, this.state, state);
-    let virtualDom = this.render();
-    let oldDom = this.getDom();
-    let container = oldDom.parentNode;
+    const virtualDom = this.render();
+    const oldDom = this.getDom();
+    const container = oldDom.parentNode;
     diff(virtualDom, container, oldDom);
   }
 

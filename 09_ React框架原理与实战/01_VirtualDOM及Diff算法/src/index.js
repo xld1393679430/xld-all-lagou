@@ -140,4 +140,59 @@ class DemoRef extends TinyReact.Component {
 }
 
 // 5, ref
-TinyReact.render(<DemoRef />, root);
+// TinyReact.render(<DemoRef />, root);
+
+class DemoKey extends TinyReact.Component {
+  constructor(props) {
+    super(props);
+
+    this.handleChange = this.handleChange.bind(this);
+
+    this.state = {
+      persons: [
+        {
+          id: 1,
+          name: "111",
+        },
+        {
+          id: 2,
+          name: "222",
+        },
+        {
+          id: 3,
+          name: "333",
+        },
+        {
+          id: 4,
+          name: "444",
+        },
+      ],
+    };
+  }
+
+  handleChange() {
+    const newState = JSON.parse(JSON.stringify(this.state));
+    // newState.persons.push(newState.persons.shift())
+    // newState.persons.splice(1, 0, { id: 9999, name: "999" });
+
+    newState.persons.pop();
+    this.setState(newState);
+  }
+
+  render() {
+    const { persons } = this.state;
+    return (
+      <div>
+        <ul>
+          {persons.map((item, index) => {
+            return <ol key={item.id}>{item.name}</ol>;
+          })}
+        </ul>
+        <button onClick={this.handleChange}>改变列表</button>
+      </div>
+    );
+  }
+}
+
+// 6, key
+TinyReact.render(<DemoKey />, root);
