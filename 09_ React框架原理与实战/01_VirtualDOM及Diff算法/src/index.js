@@ -22,14 +22,33 @@ const root = document.getElementById("root");
 // TinyReact.render(virtualDOM, root);
 
 function Demo(){
-  return <div>Hello</div>
+  return <div>Hello Demo</div>
 }
 
-function Head() {
+function Head(props) {
   return (
-    <Demo />
+    <div>
+      <p>{props.title}</p>
+      <Demo />
+    </div>
   )
 }
 
 // 渲染函数组件
-TinyReact.render(<Head />, root);
+// TinyReact.render(<Head title="Hello Head" />, root);
+
+// 渲染类组件
+class Alert extends TinyReact.Component {
+  constructor(props) {
+    super(props)
+  }
+  
+  render() {
+    const { title } = this.props
+    return (
+      <div>{title}</div>
+    )
+  }
+}
+
+TinyReact.render(<Alert title="Hello Alert" />, root);
