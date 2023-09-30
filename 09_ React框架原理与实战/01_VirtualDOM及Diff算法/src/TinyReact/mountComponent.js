@@ -4,16 +4,28 @@ import mountNativeElement from "./mountNativeElement";
 
 export default function mountComponent(virtualDom, container, oldDom) {
   let nextVirtualDom = null;
-  // 判读类组件还是函数组件
+  let component = null;
+  // 函数组件
   if (isFunctionComponent(virtualDom)) {
     nextVirtualDom = buildFunctionComponent(virtualDom);
-  } else {
+  } 
+  // 类组件
+  else {
     nextVirtualDom = buildClassComponent(virtualDom);
+    component = nextVirtualDom.component
   }
+
   if (isFunction(nextVirtualDom)) {
     mountComponent(nextVirtualDom, container, oldDom);
   } else {
     mountNativeElement(nextVirtualDom, container, oldDom);
+  }
+
+  if (component) {
+    component.componentDidMount()
+    if (component.props && component.props.ref) {
+      component.props.ref(component)
+    }
   }
 }
 

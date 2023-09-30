@@ -72,11 +72,11 @@ class Alert extends TinyReact.Component {
   }
 
   componentWillReciveProps(nextProps) {
-    console.log('componentWillReciveProps:::', nextProps);
+    console.log("componentWillReciveProps:::", nextProps);
   }
 
   componentDidMount() {
-    console.log('componentDidMount');
+    console.log("componentDidMount");
   }
 
   changeMessage() {
@@ -86,14 +86,14 @@ class Alert extends TinyReact.Component {
   }
 
   render() {
-    const { title } = this.props;
+    const { title, hideBtn } = this.props;
     const { message } = this.state;
 
     return (
       <div>
         <div>title: {title}</div>
         <div>message: {message}</div>
-        <button onClick={this.changeMessage}>改变mssage</button>
+        {hideBtn ? null : <button onClick={this.changeMessage}>改变mssage</button>}
       </div>
     );
   }
@@ -103,9 +103,41 @@ class Alert extends TinyReact.Component {
 // TinyReact.render(<Alert title="Hello Alert" />, root);
 
 // 5, 更新类组件(组件是否是同一个组件)
-TinyReact.render(<Alert title="Hello Alert" />, root);
-setTimeout(() => {
-  TinyReact.render(<Alert title="Hello Alert222" />, root);
+// TinyReact.render(<Alert title="Hello Alert" />, root);
+// setTimeout(() => {
+//   TinyReact.render(<Alert title="Hello Alert222" />, root);
 
-  // TinyReact.render(<Demo />, root);
-}, 2000);
+//   // TinyReact.render(<Demo />, root);
+// }, 2000);
+
+class DemoRef extends TinyReact.Component {
+  constructor(props) {
+    super(props);
+    this.clickRef = this.clickRef.bind(this);
+    this.clickRef2 = this.clickRef2.bind(this);
+  }
+
+  clickRef() {
+    console.log(this.input.value);
+  }
+
+  clickRef2() {
+    console.log(this.alertComent);
+  }
+
+  render() {
+    return (
+      <div>
+        <input type="text" ref={(input) => (this.input = input)} />
+        <button onClick={this.clickRef}>查看 input ref</button>
+
+        <hr />
+        <Alert hideBtn={true} ref={(com) => (this.alertComent = com)} />
+        <button onClick={this.clickRef2}>查看组件ref</button>
+      </div>
+    );
+  }
+}
+
+// 5, ref
+TinyReact.render(<DemoRef />, root);
