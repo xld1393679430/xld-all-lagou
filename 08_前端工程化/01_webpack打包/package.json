@@ -1,0 +1,12 @@
+{
+  "description": "",
+  "dependencies": {
+    "html-webpack-plugin": "^5.5.3"
+  },
+  "scripts": {
+    "dev": "npx webpack"
+  },
+  "devDependencies": {
+    "webpack-cli": "^5.1.4"
+  }
+}

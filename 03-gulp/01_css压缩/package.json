@@ -1,0 +1,12 @@
+{
+  "name": "01_css压缩",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  },
+  "scripts": {
+    "start": "npx gulp"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "name": "md2png",
+  "version": "0.1.0",
+  "description": "Awesome node modules.",
+  "keywords": [
+    "md2png",
+    "zce"
+  ],
+  "repository": "zce/md2png",
+  "license": "MIT",
+  "author": "ld_xu <ld_xu@trip.com> (https://www.ld_xu)",
+  "main": "lib/index.js",
+  "bin": "bin/md2png.js",
+  "files": [
+    "lib",
+    "bin"
+  ],
+  "scripts": {
+    "test-md2png": "md2png README.md  -o test.png -w 600",
+    "lint": "standard --fix",
+    "test": "jest --coverage",
+    "prepare": "npm run lint && npm run test"
+  },
+  "renovate": {
+    "extends": [
+      "zce"
+    ]
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ]
+  },
+  "dependencies": {
+    "commander": "^10.0.0",
+    "cosmiconfig": "^8.1.3",
+    "marked": "^4.3.0",
+    "puppeteer": "^19.8.5"
+  },
+  "devDependencies": {
+    "jest": "29.2.2",
+    "standard": "17.0.0"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "publishConfig": {
+    " ": "https://registry.npmjs.org"
+  }
+}
