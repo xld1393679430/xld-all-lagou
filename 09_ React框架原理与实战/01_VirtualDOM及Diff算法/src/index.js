@@ -5,7 +5,7 @@ const root = document.getElementById("root");
 const virtualDOM = (
   <div className="container">
     <h1>你好 Tiny React</h1>
-    <h2 data-test="test">(编码必杀技)</h2>
+    <h2 data-test="test">节点属性会被更新</h2>
     <div>
       嵌套1 <div>嵌套1.1</div>
     </div>
@@ -14,23 +14,26 @@ const virtualDOM = (
     {2 == 2 && <div> 2 == 2 </div>}
     <button onClick={() => alert("你好")}>点击</button>
     <h3>这个将会被删除</h3>
-    <input type="text" value="123" />
+    <div>
+      <input type="text" value="123" />
+    </div>
   </div>
 );
 
 const virtualDOM2 = (
   <div className="container">
     <h1>你好 Tiny React</h1>
-    <h2 data-test="test222">(编码必杀技)</h2>
+    <h2 data-test="test222">节点属性会被更新</h2>
     <div>
       嵌套1 <div>嵌套1.1</div>
     </div>
-    <h3>(观察：这个将会被改变2222)</h3>
+    <h3>(观察：这个将会被改变222)</h3>
     {2 == 1 && <div> 2 == 1 </div>}
     {2 == 2 && <div> 2 == 2 </div>}
-    <button onClick={() => alert("你好2222")}>点击</button>
-    <h3>这个将会被删除</h3>
-    <input type="text" value="222" />
+    <button onClick={() => alert("你好222")}>点击</button>
+    <div>
+      <input type="text" value="222" />
+    </div>
   </div>
 );
 
@@ -41,10 +44,10 @@ const virtualDOM2 = (
 TinyReact.render(virtualDOM, root);
 setTimeout(() => {
   TinyReact.render(virtualDOM2, root);
-}, 2000)
+}, 2000);
 
-function Demo(){
-  return <div>Hello Demo</div>
+function Demo() {
+  return <div>Hello Demo</div>;
 }
 
 function Head(props) {
@@ -53,7 +56,7 @@ function Head(props) {
       <p>{props.title}</p>
       <Demo />
     </div>
-  )
+  );
 }
 
 // 渲染函数组件
@@ -61,14 +64,12 @@ function Head(props) {
 
 class Alert extends TinyReact.Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
-  
+
   render() {
-    const { title } = this.props
-    return (
-      <div>{title}</div>
-    )
+    const { title } = this.props;
+    return <div>{title}</div>;
   }
 }
 
