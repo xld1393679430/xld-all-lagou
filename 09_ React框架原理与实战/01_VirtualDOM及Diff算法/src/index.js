@@ -2,7 +2,7 @@ import TinyReact from "./TinyReact";
 
 const root = document.getElementById("root");
 
-const virtualDOM = (
+const virtualDom = (
   <div className="container">
     <h1>你好 Tiny React</h1>
     <h2 data-test="test">节点属性会被更新</h2>
@@ -20,7 +20,7 @@ const virtualDOM = (
   </div>
 );
 
-const virtualDOM2 = (
+const virtualDom2 = (
   <div className="container">
     <h1>你好 Tiny React</h1>
     <h2 data-test="test222">节点属性会被更新</h2>
@@ -37,13 +37,13 @@ const virtualDOM2 = (
   </div>
 );
 
-// 渲染html标签
-// TinyReact.render(virtualDOM, root);
+// 1,渲染html
+// TinyReact.render(virtualDom, root);
 
-// 更新html
-// TinyReact.render(virtualDOM, root);
+// 2,更新html
+// TinyReact.render(virtualDom, root);
 // setTimeout(() => {
-//   TinyReact.render(virtualDOM2, root);
+//   TinyReact.render(virtualDom2, root);
 // }, 2000);
 
 function Demo() {
@@ -59,38 +59,45 @@ function Head(props) {
   );
 }
 
-// 渲染函数组件
+// 3,渲染函数组件
 // TinyReact.render(<Head title="Hello Head" />, root);
 
 class Alert extends TinyReact.Component {
   constructor(props) {
     super(props);
     this.state = {
-      message: "default title"
-    }
-    this.changeMessage = this.changeMessage.bind(this)
+      message: "default title",
+    };
+    this.changeMessage = this.changeMessage.bind(this);
   }
 
   changeMessage() {
     this.setState({
-      message: "修改后的message"
-    })
+      message: "修改后的message",
+    });
   }
 
   render() {
     const { title } = this.props;
-    const { message } = this.state
+    const { message } = this.state;
 
-    console.log(message, 8888);
     return (
       <div>
         <div>title: {title}</div>
-        <div>message: { message }</div>
+        <div>message: {message}</div>
         <button onClick={this.changeMessage}>改变mssage</button>
       </div>
     );
   }
 }
 
-// 渲染类组件
+// 4,渲染类组件
+// TinyReact.render(<Alert title="Hello Alert" />, root);
+
+// 5, 更新类组件(组件是否是同一个组件)
 TinyReact.render(<Alert title="Hello Alert" />, root);
+setTimeout(() => {
+  // TinyReact.render(<Alert title="Hello Alert222" />, root);
+
+  TinyReact.render(<Demo />, root);
+}, 2000);

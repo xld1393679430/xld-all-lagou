@@ -1,19 +1,19 @@
 import mountElement from "./mountElement";
 import updateNodeElement from "./updateNodeElement";
 
-export default function createDOMElement(virtualDOM) {
+export default function createDomElement(virtualDom) {
   let newElement = null;
-  if (virtualDOM.type === "text") {
-    newElement = document.createTextNode(virtualDOM.props.textContent);
+  if (virtualDom.type === "text") {
+    newElement = document.createTextNode(virtualDom.props.textContent);
   } else {
-    newElement = document.createElement(virtualDOM.type);
-    updateNodeElement(newElement, virtualDOM)
+    newElement = document.createElement(virtualDom.type);
+    updateNodeElement(newElement, virtualDom)
   }
 
-  newElement._virtualDOM = virtualDOM
+  newElement._virtualDom = virtualDom
 
   // 递归创建子节点
-  virtualDOM.children.forEach((child) => {
+  virtualDom.children.forEach((child) => {
     mountElement(child, newElement);
   });
 

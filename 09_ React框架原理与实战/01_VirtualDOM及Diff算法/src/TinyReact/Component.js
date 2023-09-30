@@ -7,10 +7,10 @@ export default class Component {
 
 	setState(state) {
 		this.state = Object.assign({}, this.state, state)
-		let virtualDOM = this.render()
+		let virtualDom = this.render()
 		let oldDom = this.getDom()
 		let container = oldDom.parentNode
-		diff(virtualDOM, container, oldDom)
+		diff(virtualDom, container, oldDom)
 	}
 
 	setDom(dom) {

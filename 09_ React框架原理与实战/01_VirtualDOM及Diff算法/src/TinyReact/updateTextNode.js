@@ -1,6 +1,6 @@
-export default function updateTextNode(virtualDOM, oldVirtualDOM, oldDOM) {
-	if (virtualDOM.props.textContent !== oldVirtualDOM.props.textContent) {
-		oldDOM.textContent = virtualDOM.props.textContent
-		oldDOM._virtualDOM = virtualDOM
+export default function updateTextNode(virtualDom, oldVirtualDom, oldDom) {
+	if (virtualDom.props.textContent !== oldVirtualDom.props.textContent) {
+		oldDom.textContent = virtualDom.props.textContent
+		oldDom._virtualDom = virtualDom
 	}
 }

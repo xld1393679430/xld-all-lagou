@@ -2,28 +2,28 @@ import isFunction from "./isFunction";
 import isFunctionComponent from "./isFunctionComponent";
 import mountNativeElement from "./mountNativeElement";
 
-export default function mountComponent(virtualDOM, container) {
-  let nextVirtualDOM = null;
+export default function mountComponent(virtualDom, container, oldDom) {
+  let nextVirtualDom = null;
   // 判读类组件还是函数组件
-  if (isFunctionComponent(virtualDOM)) {
-    nextVirtualDOM = buildFunctionComponent(virtualDOM);
+  if (isFunctionComponent(virtualDom)) {
+    nextVirtualDom = buildFunctionComponent(virtualDom);
   } else {
-    nextVirtualDOM = buildClassComponent(virtualDOM);
+    nextVirtualDom = buildClassComponent(virtualDom);
   }
-  if (isFunction(nextVirtualDOM)) {
-    mountComponent(nextVirtualDOM, container);
+  if (isFunction(nextVirtualDom)) {
+    mountComponent(nextVirtualDom, container, oldDom);
   } else {
-    mountNativeElement(nextVirtualDOM, container);
+    mountNativeElement(nextVirtualDom, container, oldDom);
   }
 }
 
-function buildFunctionComponent(virtualDOM) {
-  return virtualDOM.type(virtualDOM.props || {});
+function buildFunctionComponent(virtualDom) {
+  return virtualDom.type(virtualDom.props || {});
 }
 
-function buildClassComponent(virtualDOM) {
-  const component = new virtualDOM.type(virtualDOM.props || {});
-  const nextVirtualDOM = component.render();
-  nextVirtualDOM.component = component;
-  return nextVirtualDOM;
+function buildClassComponent(virtualDom) {
+  const component = new virtualDom.type(virtualDom.props || {});
+  const nextVirtualDom = component.render();
+  nextVirtualDom.component = component;
+  return nextVirtualDom;
 }

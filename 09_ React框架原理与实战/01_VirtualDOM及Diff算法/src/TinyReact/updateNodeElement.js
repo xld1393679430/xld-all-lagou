@@ -1,7 +1,7 @@
-export default function updateNodeElement(newElement, virtualDOM, oldVirtualDOM) {
+export default function updateNodeElement(newElement, virtualDom, oldVirtualDom) {
   // 获取节点对应的属性对象
-  const newProps = virtualDOM ? virtualDOM.props : {};
-  const oldProps = oldVirtualDOM ? oldVirtualDOM.props : {};
+  const newProps = virtualDom ? virtualDom.props : {};
+  const oldProps = oldVirtualDom ? oldVirtualDom.props : {};
 
   Object.keys(newProps).forEach((propName) => {
     const newPropsValue = newProps[propName];

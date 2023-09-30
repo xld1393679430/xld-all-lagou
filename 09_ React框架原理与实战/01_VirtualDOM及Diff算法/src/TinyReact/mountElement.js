@@ -2,13 +2,13 @@ import isFunction from "./isFunction";
 import mountComponent from "./mountComponent";
 import mountNativeElement from "./mountNativeElement";
 
-export default function mountElement(virtualDOM, container) {
+export default function mountElement(virtualDom, container, oldDom) {
   // 组件
-  if (isFunction(virtualDOM)) {
-    mountComponent(virtualDOM, container);
+  if (isFunction(virtualDom)) {
+    mountComponent(virtualDom, container, oldDom);
   }
   // NativeElement
   else {
-    mountNativeElement(virtualDOM, container);
+    mountNativeElement(virtualDom, container, oldDom);
   }
 }

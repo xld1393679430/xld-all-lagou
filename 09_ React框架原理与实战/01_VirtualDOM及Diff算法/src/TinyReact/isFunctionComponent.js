@@ -1,6 +1,6 @@
 import isFunction from "./isFunction"
 
-export default function isFunctionComponent(virtualDOM) {
-	const type = virtualDOM.type
-	return type && isFunction(virtualDOM) && !(type.prototype && type.prototype.render)
+export default function isFunctionComponent(virtualDom) {
+	const type = virtualDom.type
+	return type && isFunction(virtualDom) && !(type.prototype && type.prototype.render)
 }
