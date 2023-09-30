@@ -1,27 +1,37 @@
 import diff from "./diff";
 
 export default class Component {
-	constructor(props) {
-		this.props = props;
-	}
+  constructor(props) {
+    this.props = props;
+  }
 
-	setState(state) {
-		this.state = Object.assign({}, this.state, state)
-		let virtualDom = this.render()
-		let oldDom = this.getDom()
-		let container = oldDom.parentNode
-		diff(virtualDom, container, oldDom)
-	}
+  componentWillMount() {}
+  componentDidMount() {}
+  componentWillReciveProps(nextProps) {}
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps != this.props || nextState != this.state;
+  }
+  componentWillUpdate(nextProps, nextState) {}
+  componentDidUpdate(prevProps, prevState) {}
+  componentWillUnmount() {}
 
-	setDom(dom) {
-		this._dom = dom
-	}
+  setState(state) {
+    this.state = Object.assign({}, this.state, state);
+    let virtualDom = this.render();
+    let oldDom = this.getDom();
+    let container = oldDom.parentNode;
+    diff(virtualDom, container, oldDom);
+  }
 
-	getDom() {
-		return this._dom
-	}
+  setDom(dom) {
+    this._dom = dom;
+  }
 
-	updateProps(props) {
-		this.props = props
-	}
+  getDom() {
+    return this._dom;
+  }
+
+  updateProps(props) {
+    this.props = props;
+  }
 }

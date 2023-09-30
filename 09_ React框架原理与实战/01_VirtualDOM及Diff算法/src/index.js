@@ -71,6 +71,14 @@ class Alert extends TinyReact.Component {
     this.changeMessage = this.changeMessage.bind(this);
   }
 
+  componentWillReciveProps(nextProps) {
+    console.log('componentWillReciveProps:::', nextProps);
+  }
+
+  componentDidMount() {
+    console.log('componentDidMount');
+  }
+
   changeMessage() {
     this.setState({
       message: "修改后的message",
