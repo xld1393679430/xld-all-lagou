@@ -16,8 +16,20 @@ const virtualDOM = (
   </div>
 );
 
-console.log(virtualDOM);
-
 const root = document.getElementById("root");
 
-TinyReact.render(virtualDOM, root);
+// 渲染html标签
+// TinyReact.render(virtualDOM, root);
+
+function Demo(){
+  return <div>Hello</div>
+}
+
+function Head() {
+  return (
+    <Demo />
+  )
+}
+
+// 渲染函数组件
+TinyReact.render(<Head />, root);

@@ -1,6 +1,14 @@
+import isFunction from "./isFunction";
+import mountComponent from "./mountComponent";
 import mountNativeElement from "./mountNativeElement";
 
 export default function mountElement(virtualDOM, container) {
-	// 比较是普通标签还是组件
-	mountNativeElement(virtualDOM, container)
+  // 组件
+  if (isFunction(virtualDOM)) {
+    mountComponent(virtualDOM, container);
+  }
+  // NativeElement
+  else {
+    mountNativeElement(virtualDOM, container);
+  }
 }
