@@ -13,11 +13,22 @@ const jsx = (
 // render(jsx, root)
 
 // 4, 更新基础节点
+// render(jsx, root);
+// setTimeout(() => {
+//   const jsx2 = (
+//     <div>
+//       <div>Hello React222</div>
+//       <p>Hello Filber222</p>
+//     </div>
+//   );
+//   render(jsx2, root);
+// }, 2000);
+
+// 5, 删除基础节点
 render(jsx, root);
 setTimeout(() => {
   const jsx2 = (
     <div>
-      <div>Hello React222</div>
       <p>Hello Filber222</p>
     </div>
   );

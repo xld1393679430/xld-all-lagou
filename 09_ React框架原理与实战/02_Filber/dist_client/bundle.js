@@ -123,10 +123,21 @@ var root = document.getElementById("root");
 var jsx = /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hello React"), /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hello Filber")); // 1, 渲染基础节点
 // render(jsx, root)
 // 4, 更新基础节点
+// render(jsx, root);
+// setTimeout(() => {
+//   const jsx2 = (
+//     <div>
+//       <div>Hello React222</div>
+//       <p>Hello Filber222</p>
+//     </div>
+//   );
+//   render(jsx2, root);
+// }, 2000);
+// 5, 删除基础节点
 
 Object(_react__WEBPACK_IMPORTED_MODULE_0__["render"])(jsx, root);
 setTimeout(function () {
-  var jsx2 = /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, "Hello React222"), /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hello Filber222"));
+  var jsx2 = /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hello Filber222"));
   Object(_react__WEBPACK_IMPORTED_MODULE_0__["render"])(jsx2, root);
 }, 2000);
 
@@ -533,27 +544,30 @@ var subTask = null,
 
 var commitAllWork = function commitAllWork(fiber) {
   fiber.effects.forEach(function (item) {
-    // 更新节点
-    if (item.effectTag === "update") {
-      // 判读节点是否相同。 不同则创建新的节点
-      if (item.type === item.alternate.type) {
-        Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["updateNodeElement"])(item.stateNode, item, item.alternate);
-      } else {
-        item.parent.stateNode.replaceChild(item.stateNode, item.alternate.stateNode);
-      }
-    } // 初始创建节点
-    else if (item.effectTag === "placement") {
-        var _fiber = item;
-        var parentFiber = item.parent;
-
-        while (parentFiber.tag === "class_component" || parentFiber.tag === "function_component") {
-          parentFiber = parentFiber.parent;
+    // 删除节点
+    if (item.effectTag === "delete") {
+      item.parent.stateNode.removeChild(item.stateNode);
+    } // 更新节点
+    else if (item.effectTag === "update") {
+        // 判读节点是否相同。 不同则创建新的节点
+        if (item.type === item.alternate.type) {
+          Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["updateNodeElement"])(item.stateNode, item, item.alternate);
+        } else {
+          item.parent.stateNode.replaceChild(item.stateNode, item.alternate.stateNode);
         }
+      } // 初始创建节点
+      else if (item.effectTag === "placement") {
+          var _fiber = item;
+          var parentFiber = item.parent;
 
-        if (_fiber.tag === "host_component") {
-          parentFiber.stateNode.appendChild(_fiber.stateNode);
+          while (parentFiber.tag === "class_component" || parentFiber.tag === "function_component") {
+            parentFiber = parentFiber.parent;
+          }
+
+          if (_fiber.tag === "host_component") {
+            parentFiber.stateNode.appendChild(_fiber.stateNode);
+          }
         }
-      }
   }); // 备份旧的fiber节点对象
 
   fiber.stateNode.__rootFiberContainer = fiber;
@@ -585,43 +599,47 @@ var reconcileChildren = function reconcileChildren(fiber, children) {
     alternate = fiber.alternate.child;
   }
 
-  while (index < numberOfElements) {
-    element = arrifiiedChildren[index]; //更新
+  while (index < numberOfElements || alternate) {
+    element = arrifiiedChildren[index]; // 节点删除
 
-    if (element && alternate) {
-      newFiber = {
-        type: element.type,
-        props: element.props,
-        tag: Object(_Misc__WEBPACK_IMPORTED_MODULE_1__["getTag"])(element),
-        effects: [],
-        effectTag: "update",
-        parent: fiber,
-        alternate: alternate
-      }; // 判读更新的节点是否相同
-
-      if (element.type === alternate.type) {
-        newFiber.stateNode = alternate.stateNode;
-      } else {
-        newFiber.stateNode = Object(_Misc__WEBPACK_IMPORTED_MODULE_1__["creatStateNode"])(newFiber);
-      }
-    } // 初始渲染
-    else if (element && !alternate) {
+    if (!element && alternate) {
+      alternate.effectTag = "delete";
+      fiber.effects.push(alternate);
+    } // 节点更新
+    else if (element && alternate) {
         newFiber = {
           type: element.type,
           props: element.props,
           tag: Object(_Misc__WEBPACK_IMPORTED_MODULE_1__["getTag"])(element),
           effects: [],
-          effectTag: "placement",
-          parent: fiber
-        };
-        newFiber.stateNode = Object(_Misc__WEBPACK_IMPORTED_MODULE_1__["creatStateNode"])(newFiber);
-      }
+          effectTag: "update",
+          parent: fiber,
+          alternate: alternate
+        }; // 判读更新的节点是否相同
+
+        if (element.type === alternate.type) {
+          newFiber.stateNode = alternate.stateNode;
+        } else {
+          newFiber.stateNode = Object(_Misc__WEBPACK_IMPORTED_MODULE_1__["creatStateNode"])(newFiber);
+        }
+      } // 初始渲染
+      else if (element && !alternate) {
+          newFiber = {
+            type: element.type,
+            props: element.props,
+            tag: Object(_Misc__WEBPACK_IMPORTED_MODULE_1__["getTag"])(element),
+            effects: [],
+            effectTag: "placement",
+            parent: fiber
+          };
+          newFiber.stateNode = Object(_Misc__WEBPACK_IMPORTED_MODULE_1__["creatStateNode"])(newFiber);
+        }
 
     console.log(345, newFiber);
 
     if (index === 0) {
       fiber.child = newFiber;
-    } else {
+    } else if (element) {
       prevFiber.sibling = newFiber;
     }
 

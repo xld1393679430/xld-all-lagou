@@ -8,8 +8,12 @@ let subTask = null,
 
 const commitAllWork = (fiber) => {
   fiber.effects.forEach((item) => {
+    // 删除节点
+    if (item.effectTag === "delete") {
+      item.parent.stateNode.removeChild(item.stateNode);
+    }
     // 更新节点
-    if (item.effectTag === "update") {
+    else if (item.effectTag === "update") {
       // 判读节点是否相同。 不同则创建新的节点
       if (item.type === item.alternate.type) {
         updateNodeElement(item.stateNode, item, item.alternate);
@@ -62,11 +66,15 @@ const reconcileChildren = (fiber, children) => {
     alternate = fiber.alternate.child;
   }
 
-  while (index < numberOfElements) {
+  while (index < numberOfElements || alternate) {
     element = arrifiiedChildren[index];
-
-    //更新
-    if (element && alternate) {
+    // 节点删除
+    if (!element && alternate) {
+      alternate.effectTag = "delete";
+      fiber.effects.push(alternate);
+    }
+    // 节点更新
+    else if (element && alternate) {
       newFiber = {
         type: element.type,
         props: element.props,
@@ -101,7 +109,7 @@ const reconcileChildren = (fiber, children) => {
     console.log(345, newFiber);
     if (index === 0) {
       fiber.child = newFiber;
-    } else {
+    } else if (element) {
       prevFiber.sibling = newFiber;
     }
 
