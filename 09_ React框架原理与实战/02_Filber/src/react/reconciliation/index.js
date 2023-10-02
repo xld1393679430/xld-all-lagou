@@ -5,8 +5,8 @@ const taskQueue = createTaskQueue();
 let subTask = null,
   pendingCommit = null;
 
-const commitAllWork = (filber) => {
-  filber.effects.forEach((item) => {
+const commitAllWork = (fiber) => {
+  fiber.effects.forEach((item) => {
     if (item.effectTag === "placement") {
       let fiber = item;
       let parentFiber = item.parent;
@@ -18,7 +18,10 @@ const commitAllWork = (filber) => {
       }
     }
   });
-  console.log(222, filber);
+
+  // 备份旧的fiber节点对象
+  // fiber
+  console.log(222, fiber);
 };
 
 const getFirstTask = () => {
@@ -33,7 +36,7 @@ const getFirstTask = () => {
   };
 };
 
-const reconcileChildren = (filber, children) => {
+const reconcileChildren = (fiber, children) => {
   const arrifiiedChildren = arrifiied(children);
 
   let index = 0;
@@ -50,14 +53,14 @@ const reconcileChildren = (filber, children) => {
       tag: getTag(element),
       effects: [],
       effectTag: "placement",
-      parent: filber,
+      parent: fiber,
     };
 
     newFiber.stateNode = creatStateNode(newFiber);
 
     console.log(345, newFiber);
     if (index === 0) {
-      filber.child = newFiber;
+      fiber.child = newFiber;
     } else {
       prevFiber.sibling = newFiber;
     }
@@ -68,20 +71,20 @@ const reconcileChildren = (filber, children) => {
   }
 };
 
-const executeTask = (filber) => {
-  if (filber.tag === "class_component") {
-    reconcileChildren(filber, filber.stateNode.render());
-  } else if (filber.tag === "function_component") {
-    reconcileChildren(filber, filber.stateNode(filber.props));
+const executeTask = (fiber) => {
+  if (fiber.tag === "class_component") {
+    reconcileChildren(fiber, fiber.stateNode.render());
+  } else if (fiber.tag === "function_component") {
+    reconcileChildren(fiber, fiber.stateNode(fiber.props));
   } else {
-    reconcileChildren(filber, filber.props.children);
+    reconcileChildren(fiber, fiber.props.children);
   }
 
-  if (filber.child) {
-    return filber.child;
+  if (fiber.child) {
+    return fiber.child;
   }
 
-  let currentExecutelyFiber = filber;
+  let currentExecutelyFiber = fiber;
 
   while (currentExecutelyFiber.parent) {
     currentExecutelyFiber.parent.effects = currentExecutelyFiber.parent.effects.concat(

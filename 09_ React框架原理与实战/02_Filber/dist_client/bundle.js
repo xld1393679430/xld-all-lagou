@@ -137,21 +137,21 @@ var Greating = /*#__PURE__*/function (_Component) {
   _createClass(Greating, [{
     key: "render",
     value: function render() {
-      return /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, "Hello Greating");
+      var title = this.props.title;
+      return /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, "Hello Greating. title: ", title);
     }
   }]);
 
   return Greating;
 }(_react__WEBPACK_IMPORTED_MODULE_0__["Component"]); // 2,渲染类组件
-// render(<Greating />, root)
+// render(<Greating title={"我是title"} />, root)
 
 
-function FnComponent() {
-  return /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, "Hello Function Component");
+function FnComponent(_ref) {
+  var title = _ref.title;
+  return /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, "Hello Function Component. title: ", title);
 } // 3,渲染函数组件
-
-
-Object(_react__WEBPACK_IMPORTED_MODULE_0__["render"])( /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement(FnComponent, null), root);
+// render(<FnComponent title={"我是title"} />, root);
 
 /***/ }),
 
@@ -353,11 +353,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CreateReactInstance__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../CreateReactInstance */ "./src/react/Misc/CreateReactInstance/index.js");
 
 
-function creatStateNode(filber) {
-  if (filber.tag === "host_component") {
-    return Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["createDOMElement"])(filber);
+function creatStateNode(fiber) {
+  if (fiber.tag === "host_component") {
+    return Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["createDOMElement"])(fiber);
   } else {
-    return Object(_CreateReactInstance__WEBPACK_IMPORTED_MODULE_1__["createReactInstance"])(filber);
+    return Object(_CreateReactInstance__WEBPACK_IMPORTED_MODULE_1__["createReactInstance"])(fiber);
   }
 }
 
@@ -373,13 +373,13 @@ function creatStateNode(filber) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createReactInstance", function() { return createReactInstance; });
-var createReactInstance = function createReactInstance(filber) {
+var createReactInstance = function createReactInstance(fiber) {
   var instance = null;
 
-  if (filber.tag === 'class_component') {
-    instance = new filber.type(filber.props);
+  if (fiber.tag === 'class_component') {
+    instance = new fiber.type(fiber.props);
   } else {
-    instance = filber.type;
+    instance = fiber.type;
   }
 
   return instance;
@@ -509,22 +509,24 @@ var taskQueue = Object(_Misc__WEBPACK_IMPORTED_MODULE_0__["createTaskQueue"])();
 var subTask = null,
     pendingCommit = null;
 
-var commitAllWork = function commitAllWork(filber) {
-  filber.effects.forEach(function (item) {
+var commitAllWork = function commitAllWork(fiber) {
+  fiber.effects.forEach(function (item) {
     if (item.effectTag === "placement") {
-      var fiber = item;
+      var _fiber = item;
       var parentFiber = item.parent;
 
       while (parentFiber.tag === "class_component" || parentFiber.tag === "function_component") {
         parentFiber = parentFiber.parent;
       }
 
-      if (fiber.tag === "host_component") {
-        parentFiber.stateNode.appendChild(fiber.stateNode);
+      if (_fiber.tag === "host_component") {
+        parentFiber.stateNode.appendChild(_fiber.stateNode);
       }
     }
-  });
-  console.log(222, filber);
+  }); // 备份旧的fiber节点对象
+  // fiber
+
+  console.log(222, fiber);
 };
 
 var getFirstTask = function getFirstTask() {
@@ -538,7 +540,7 @@ var getFirstTask = function getFirstTask() {
   };
 };
 
-var reconcileChildren = function reconcileChildren(filber, children) {
+var reconcileChildren = function reconcileChildren(fiber, children) {
   var arrifiiedChildren = Object(_Misc__WEBPACK_IMPORTED_MODULE_0__["arrifiied"])(children);
   var index = 0;
   var numberOfElements = arrifiiedChildren.length;
@@ -554,13 +556,13 @@ var reconcileChildren = function reconcileChildren(filber, children) {
       tag: Object(_Misc__WEBPACK_IMPORTED_MODULE_0__["getTag"])(element),
       effects: [],
       effectTag: "placement",
-      parent: filber
+      parent: fiber
     };
     newFiber.stateNode = Object(_Misc__WEBPACK_IMPORTED_MODULE_0__["creatStateNode"])(newFiber);
     console.log(345, newFiber);
 
     if (index === 0) {
-      filber.child = newFiber;
+      fiber.child = newFiber;
     } else {
       prevFiber.sibling = newFiber;
     }
@@ -570,20 +572,20 @@ var reconcileChildren = function reconcileChildren(filber, children) {
   }
 };
 
-var executeTask = function executeTask(filber) {
-  if (filber.tag === "class_component") {
-    reconcileChildren(filber, filber.stateNode.render());
-  } else if (filber.tag === "function_component") {
-    reconcileChildren(filber, filber.stateNode(filber.props));
+var executeTask = function executeTask(fiber) {
+  if (fiber.tag === "class_component") {
+    reconcileChildren(fiber, fiber.stateNode.render());
+  } else if (fiber.tag === "function_component") {
+    reconcileChildren(fiber, fiber.stateNode(fiber.props));
   } else {
-    reconcileChildren(filber, filber.props.children);
+    reconcileChildren(fiber, fiber.props.children);
   }
 
-  if (filber.child) {
-    return filber.child;
+  if (fiber.child) {
+    return fiber.child;
   }
 
-  var currentExecutelyFiber = filber;
+  var currentExecutelyFiber = fiber;
 
   while (currentExecutelyFiber.parent) {
     currentExecutelyFiber.parent.effects = currentExecutelyFiber.parent.effects.concat(currentExecutelyFiber.effects.concat([currentExecutelyFiber]));

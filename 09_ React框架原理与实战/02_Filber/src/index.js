@@ -18,16 +18,17 @@ class Greating extends Component {
   }
 
   render() {
-    return <div>Hello Greating</div>;
+    const { title } = this.props;
+    return <div>Hello Greating. title: {title}</div>;
   }
 }
 
 // 2,渲染类组件
-// render(<Greating />, root)
+// render(<Greating title={"我是title"} />, root)
 
-function FnComponent() {
-  return <div>Hello Function Component</div>;
+function FnComponent({ title }) {
+  return <div>Hello Function Component. title: {title}</div>;
 }
 
 // 3,渲染函数组件
-render(<FnComponent />, root);
+// render(<FnComponent title={"我是title"} />, root);
