@@ -122,6 +122,13 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 var root = document.getElementById("root");
 var jsx = /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hello React"), /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hello Filber")); // 1, 渲染基础节点
 // render(jsx, root)
+// 4, 更新基础节点
+
+Object(_react__WEBPACK_IMPORTED_MODULE_0__["render"])(jsx, root);
+setTimeout(function () {
+  var jsx2 = /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, "Hello React222"), /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hello Filber222"));
+  Object(_react__WEBPACK_IMPORTED_MODULE_0__["render"])(jsx2, root);
+}, 2000);
 
 var Greating = /*#__PURE__*/function (_Component) {
   _inherits(Greating, _Component);
@@ -277,6 +284,19 @@ function updateNodeElement(newElement, virtualDom, oldVirtualDom) {
   // 获取节点对应的属性对象
   var newProps = virtualDom ? virtualDom.props : {};
   var oldProps = oldVirtualDom ? oldVirtualDom.props : {};
+
+  if (virtualDom.type === "text") {
+    if (newProps.textContent !== oldProps.textContent) {
+      if (virtualDom.parent.type !== oldVirtualDom.parent.type) {
+        virtualDom.parent.stateNode.appendChild(document.createTextNode(newProps.textContent));
+      } else {
+        virtualDom.parent.stateNode.replaceChild(document.createTextNode(newProps.textContent), oldVirtualDom.stateNode);
+      }
+    }
+
+    return;
+  }
+
   Object.keys(newProps).forEach(function (propName) {
     var newPropsValue = newProps[propName];
     var oldPropsValue = oldProps[propName];
@@ -503,29 +523,40 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony import */ var _Misc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Misc */ "./src/react/Misc/index.js");
+/* harmony import */ var _DOM__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../DOM */ "./src/react/DOM/index.js");
+/* harmony import */ var _Misc__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Misc */ "./src/react/Misc/index.js");
 
-var taskQueue = Object(_Misc__WEBPACK_IMPORTED_MODULE_0__["createTaskQueue"])();
+
+var taskQueue = Object(_Misc__WEBPACK_IMPORTED_MODULE_1__["createTaskQueue"])();
 var subTask = null,
     pendingCommit = null;
 
 var commitAllWork = function commitAllWork(fiber) {
   fiber.effects.forEach(function (item) {
-    if (item.effectTag === "placement") {
-      var _fiber = item;
-      var parentFiber = item.parent;
-
-      while (parentFiber.tag === "class_component" || parentFiber.tag === "function_component") {
-        parentFiber = parentFiber.parent;
+    // 更新节点
+    if (item.effectTag === "update") {
+      // 判读节点是否相同。 不同则创建新的节点
+      if (item.type === item.alternate.type) {
+        Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["updateNodeElement"])(item.stateNode, item, item.alternate);
+      } else {
+        item.parent.stateNode.replaceChild(item.stateNode, item.alternate.stateNode);
       }
+    } // 初始创建节点
+    else if (item.effectTag === "placement") {
+        var _fiber = item;
+        var parentFiber = item.parent;
 
-      if (_fiber.tag === "host_component") {
-        parentFiber.stateNode.appendChild(_fiber.stateNode);
+        while (parentFiber.tag === "class_component" || parentFiber.tag === "function_component") {
+          parentFiber = parentFiber.parent;
+        }
+
+        if (_fiber.tag === "host_component") {
+          parentFiber.stateNode.appendChild(_fiber.stateNode);
+        }
       }
-    }
   }); // 备份旧的fiber节点对象
-  // fiber
 
+  fiber.stateNode.__rootFiberContainer = fiber;
   console.log(222, fiber);
 };
 
@@ -536,35 +567,68 @@ var getFirstTask = function getFirstTask() {
     stateNode: task.dom,
     tag: "host_root",
     effects: [],
-    child: null
+    child: null,
+    alternate: task.dom.__rootFiberContainer
   };
 };
 
 var reconcileChildren = function reconcileChildren(fiber, children) {
-  var arrifiiedChildren = Object(_Misc__WEBPACK_IMPORTED_MODULE_0__["arrifiied"])(children);
+  var arrifiiedChildren = Object(_Misc__WEBPACK_IMPORTED_MODULE_1__["arrifiied"])(children);
   var index = 0;
   var numberOfElements = arrifiiedChildren.length;
   var element = null,
       newFiber = null,
-      prevFiber = null;
+      prevFiber = null,
+      alternate = null;
+
+  if (fiber.alternate && fiber.alternate.child) {
+    alternate = fiber.alternate.child;
+  }
 
   while (index < numberOfElements) {
-    element = arrifiiedChildren[index];
-    newFiber = {
-      type: element.type,
-      props: element.props,
-      tag: Object(_Misc__WEBPACK_IMPORTED_MODULE_0__["getTag"])(element),
-      effects: [],
-      effectTag: "placement",
-      parent: fiber
-    };
-    newFiber.stateNode = Object(_Misc__WEBPACK_IMPORTED_MODULE_0__["creatStateNode"])(newFiber);
+    element = arrifiiedChildren[index]; //更新
+
+    if (element && alternate) {
+      newFiber = {
+        type: element.type,
+        props: element.props,
+        tag: Object(_Misc__WEBPACK_IMPORTED_MODULE_1__["getTag"])(element),
+        effects: [],
+        effectTag: "update",
+        parent: fiber,
+        alternate: alternate
+      }; // 判读更新的节点是否相同
+
+      if (element.type === alternate.type) {
+        newFiber.stateNode = alternate.stateNode;
+      } else {
+        newFiber.stateNode = Object(_Misc__WEBPACK_IMPORTED_MODULE_1__["creatStateNode"])(newFiber);
+      }
+    } // 初始渲染
+    else if (element && !alternate) {
+        newFiber = {
+          type: element.type,
+          props: element.props,
+          tag: Object(_Misc__WEBPACK_IMPORTED_MODULE_1__["getTag"])(element),
+          effects: [],
+          effectTag: "placement",
+          parent: fiber
+        };
+        newFiber.stateNode = Object(_Misc__WEBPACK_IMPORTED_MODULE_1__["creatStateNode"])(newFiber);
+      }
+
     console.log(345, newFiber);
 
     if (index === 0) {
       fiber.child = newFiber;
     } else {
       prevFiber.sibling = newFiber;
+    }
+
+    if (alternate && alternate.sibling) {
+      alternate = alternate.sibling;
+    } else {
+      alternate = null;
     }
 
     prevFiber = newFiber;

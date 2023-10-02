@@ -12,6 +12,18 @@ const jsx = (
 // 1, 渲染基础节点
 // render(jsx, root)
 
+// 4, 更新基础节点
+render(jsx, root);
+setTimeout(() => {
+  const jsx2 = (
+    <div>
+      <div>Hello React222</div>
+      <p>Hello Filber222</p>
+    </div>
+  );
+  render(jsx2, root);
+}, 2000);
+
 class Greating extends Component {
   constructor(props) {
     super(props);
