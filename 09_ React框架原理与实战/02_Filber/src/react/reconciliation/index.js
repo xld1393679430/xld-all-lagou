@@ -6,13 +6,19 @@ let subTask = null,
   pendingCommit = null;
 
 const commitAllWork = (filber) => {
-  filber.effects.forEach(item => {
-    if (item.effectTag === 'placement') {
-      item.parent.stateNode.appendChild(item.stateNode)
+  filber.effects.forEach((item) => {
+    if (item.effectTag === "placement") {
+      let fiber = item;
+      let parentFiber = item.parent;
+      while (parentFiber.tag === "class_component") {
+        parentFiber = parentFiber.parent;
+      }
+      if (fiber.tag === "host_component") {
+        parentFiber.stateNode.appendChild(fiber.stateNode);
+      }
     }
-  })
+  });
   console.log(222, filber);
-
 };
 
 const getFirstTask = () => {
@@ -49,6 +55,7 @@ const reconcileChildren = (filber, children) => {
 
     newFiber.stateNode = creatStateNode(newFiber);
 
+    console.log(345, newFiber);
     if (index === 0) {
       filber.child = newFiber;
     } else {
@@ -62,7 +69,11 @@ const reconcileChildren = (filber, children) => {
 };
 
 const executeTask = (filber) => {
-  reconcileChildren(filber, filber.props.children);
+  if (filber.tag === "class_component") {
+    reconcileChildren(filber, filber.stateNode.render());
+  } else {
+    reconcileChildren(filber, filber.props.children);
+  }
 
   if (filber.child) {
     return filber.child;
