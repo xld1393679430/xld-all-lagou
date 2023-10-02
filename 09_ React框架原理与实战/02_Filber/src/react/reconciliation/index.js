@@ -1,5 +1,5 @@
 import { updateNodeElement } from "../DOM";
-import { arrifiied, creatStateNode, createTaskQueue, getTag } from "../Misc";
+import { arrifiied, creatStateNode, createTaskQueue, getRoot, getTag } from "../Misc";
 
 const taskQueue = createTaskQueue();
 
@@ -8,6 +8,10 @@ let subTask = null,
 
 const commitAllWork = (fiber) => {
   fiber.effects.forEach((item) => {
+    if (item.tag === "class_component") {
+      item.stateNode.__fiber = item;
+    }
+
     // 删除节点
     if (item.effectTag === "delete") {
       item.parent.stateNode.removeChild(item.stateNode);
@@ -41,6 +45,19 @@ const commitAllWork = (fiber) => {
 
 const getFirstTask = () => {
   const task = taskQueue.pop();
+
+  if (task.from === "class_component") {
+    const root = getRoot(task.instace);
+    task.instace.__fiber.partialState = task.partialState;
+    return {
+      props: root.props,
+      stateNode: root.stateNode,
+      tag: "host_root",
+      effects: [],
+      child: null,
+      alternate: root,
+    };
+  }
 
   return {
     props: task.props,
@@ -127,6 +144,12 @@ const reconcileChildren = (fiber, children) => {
 
 const executeTask = (fiber) => {
   if (fiber.tag === "class_component") {
+    if (fiber.stateNode.__fiber && fiber.stateNode.__fiber.partialState) {
+      fiber.stateNode.state = {
+        ...fiber.stateNode.state,
+        ...fiber.stateNode.__fiber.partialState,
+      };
+    }
     reconcileChildren(fiber, fiber.stateNode.render());
   } else if (fiber.tag === "function_component") {
     reconcileChildren(fiber, fiber.stateNode(fiber.props));
@@ -185,6 +208,16 @@ export const render = (element, dom) => {
     props: {
       children: element,
     },
+  });
+
+  requestIdleCallback(performTask);
+};
+
+export const scheduleUpdate = (instace, partialState) => {
+  taskQueue.push({
+    from: "class_component",
+    instace,
+    partialState,
   });
 
   requestIdleCallback(performTask);

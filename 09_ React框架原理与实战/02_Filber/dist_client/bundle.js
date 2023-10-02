@@ -134,12 +134,15 @@ var jsx = /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElem
 //   render(jsx2, root);
 // }, 2000);
 // 5, 删除基础节点
-
-Object(_react__WEBPACK_IMPORTED_MODULE_0__["render"])(jsx, root);
-setTimeout(function () {
-  var jsx2 = /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hello Filber222"));
-  Object(_react__WEBPACK_IMPORTED_MODULE_0__["render"])(jsx2, root);
-}, 2000);
+// render(jsx, root);
+// setTimeout(() => {
+//   const jsx2 = (
+//     <div>
+//       <p>Hello Filber222</p>
+//     </div>
+//   );
+//   render(jsx2, root);
+// }, 2000);
 
 var Greating = /*#__PURE__*/function (_Component) {
   _inherits(Greating, _Component);
@@ -165,6 +168,48 @@ var Greating = /*#__PURE__*/function (_Component) {
 // render(<Greating title={"我是title"} />, root)
 
 
+var Greating2 = /*#__PURE__*/function (_Component2) {
+  _inherits(Greating2, _Component2);
+
+  var _super2 = _createSuper(Greating2);
+
+  function Greating2(props) {
+    var _this;
+
+    _classCallCheck(this, Greating2);
+
+    _this = _super2.call(this, props);
+    _this.state = {
+      name: "aaaa"
+    };
+    return _this;
+  }
+
+  _createClass(Greating2, [{
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      var title = this.props.title;
+      var name = this.state.name;
+      return /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, "Hello Greating. title: ", title), /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "name: ", name), /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("button", {
+        onClick: function onClick() {
+          _this2.setState({
+            name: "bbb"
+          });
+        }
+      }, "\u66F4\u65B0name"));
+    }
+  }]);
+
+  return Greating2;
+}(_react__WEBPACK_IMPORTED_MODULE_0__["Component"]); // 类组件状态更新
+
+
+Object(_react__WEBPACK_IMPORTED_MODULE_0__["render"])( /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement(Greating2, {
+  title: "我是title"
+}), root);
+
 function FnComponent(_ref) {
   var title = _ref.title;
   return /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, "Hello Function Component. title: ", title);
@@ -183,13 +228,30 @@ function FnComponent(_ref) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Component", function() { return Component; });
+/* harmony import */ var _reconciliation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../reconciliation */ "./src/react/reconciliation/index.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Component = function Component(props) {
-  _classCallCheck(this, Component);
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-  this.props = props;
-};
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+var Component = /*#__PURE__*/function () {
+  function Component(props) {
+    _classCallCheck(this, Component);
+
+    this.props = props;
+  }
+
+  _createClass(Component, [{
+    key: "setState",
+    value: function setState(partialState) {
+      Object(_reconciliation__WEBPACK_IMPORTED_MODULE_0__["scheduleUpdate"])(this, partialState);
+    }
+  }]);
+
+  return Component;
+}();
 
 /***/ }),
 
@@ -445,6 +507,28 @@ function createTaskQueue() {
 
 /***/ }),
 
+/***/ "./src/react/Misc/getRoot/index.js":
+/*!*****************************************!*\
+  !*** ./src/react/Misc/getRoot/index.js ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return getRoot; });
+function getRoot(instance) {
+  var fiber = instance.__fiber;
+
+  while (fiber.parent) {
+    fiber = fiber.parent;
+  }
+
+  return fiber;
+}
+
+/***/ }),
+
 /***/ "./src/react/Misc/getTag/index.js":
 /*!****************************************!*\
   !*** ./src/react/Misc/getTag/index.js ***!
@@ -475,7 +559,7 @@ var getTag = function getTag(vdom) {
 /*!*********************************!*\
   !*** ./src/react/Misc/index.js ***!
   \*********************************/
-/*! exports provided: createTaskQueue, arrifiied, creatStateNode, getTag */
+/*! exports provided: createTaskQueue, arrifiied, creatStateNode, getTag, getRoot */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -491,6 +575,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _getTag__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getTag */ "./src/react/Misc/getTag/index.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getTag", function() { return _getTag__WEBPACK_IMPORTED_MODULE_3__["default"]; });
+
+/* harmony import */ var _getRoot__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./getRoot */ "./src/react/Misc/getRoot/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getRoot", function() { return _getRoot__WEBPACK_IMPORTED_MODULE_4__["default"]; });
+
 
 
 
@@ -528,14 +616,21 @@ __webpack_require__.r(__webpack_exports__);
 /*!*******************************************!*\
   !*** ./src/react/reconciliation/index.js ***!
   \*******************************************/
-/*! exports provided: render */
+/*! exports provided: render, scheduleUpdate */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "scheduleUpdate", function() { return scheduleUpdate; });
 /* harmony import */ var _DOM__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../DOM */ "./src/react/DOM/index.js");
 /* harmony import */ var _Misc__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Misc */ "./src/react/Misc/index.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 var taskQueue = Object(_Misc__WEBPACK_IMPORTED_MODULE_1__["createTaskQueue"])();
@@ -544,7 +639,11 @@ var subTask = null,
 
 var commitAllWork = function commitAllWork(fiber) {
   fiber.effects.forEach(function (item) {
-    // 删除节点
+    if (item.tag === "class_component") {
+      item.stateNode.__fiber = item;
+    } // 删除节点
+
+
     if (item.effectTag === "delete") {
       item.parent.stateNode.removeChild(item.stateNode);
     } // 更新节点
@@ -576,6 +675,20 @@ var commitAllWork = function commitAllWork(fiber) {
 
 var getFirstTask = function getFirstTask() {
   var task = taskQueue.pop();
+
+  if (task.from === "class_component") {
+    var root = Object(_Misc__WEBPACK_IMPORTED_MODULE_1__["getRoot"])(task.instace);
+    task.instace.__fiber.partialState = task.partialState;
+    return {
+      props: root.props,
+      stateNode: root.stateNode,
+      tag: "host_root",
+      effects: [],
+      child: null,
+      alternate: root
+    };
+  }
+
   return {
     props: task.props,
     stateNode: task.dom,
@@ -656,6 +769,10 @@ var reconcileChildren = function reconcileChildren(fiber, children) {
 
 var executeTask = function executeTask(fiber) {
   if (fiber.tag === "class_component") {
+    if (fiber.stateNode.__fiber && fiber.stateNode.__fiber.partialState) {
+      fiber.stateNode.state = _objectSpread(_objectSpread({}, fiber.stateNode.state), fiber.stateNode.__fiber.partialState);
+    }
+
     reconcileChildren(fiber, fiber.stateNode.render());
   } else if (fiber.tag === "function_component") {
     reconcileChildren(fiber, fiber.stateNode(fiber.props));
@@ -714,6 +831,14 @@ var render = function render(element, dom) {
     props: {
       children: element
     }
+  });
+  requestIdleCallback(performTask);
+};
+var scheduleUpdate = function scheduleUpdate(instace, partialState) {
+  taskQueue.push({
+    from: "class_component",
+    instace: instace,
+    partialState: partialState
   });
   requestIdleCallback(performTask);
 };
