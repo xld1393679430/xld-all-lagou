@@ -119,7 +119,7 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 
-var root = document.getElementById('root');
+var root = document.getElementById("root");
 var jsx = /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hello React"), /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hello Filber")); // 1, 渲染基础节点
 // render(jsx, root)
 
@@ -143,9 +143,15 @@ var Greating = /*#__PURE__*/function (_Component) {
 
   return Greating;
 }(_react__WEBPACK_IMPORTED_MODULE_0__["Component"]); // 2,渲染类组件
+// render(<Greating />, root)
 
 
-Object(_react__WEBPACK_IMPORTED_MODULE_0__["render"])( /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement(Greating, null), root);
+function FnComponent() {
+  return /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, "Hello Function Component");
+} // 3,渲染函数组件
+
+
+Object(_react__WEBPACK_IMPORTED_MODULE_0__["render"])( /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement(FnComponent, null), root);
 
 /***/ }),
 
@@ -509,7 +515,7 @@ var commitAllWork = function commitAllWork(filber) {
       var fiber = item;
       var parentFiber = item.parent;
 
-      while (parentFiber.tag === "class_component") {
+      while (parentFiber.tag === "class_component" || parentFiber.tag === "function_component") {
         parentFiber = parentFiber.parent;
       }
 
@@ -567,6 +573,8 @@ var reconcileChildren = function reconcileChildren(filber, children) {
 var executeTask = function executeTask(filber) {
   if (filber.tag === "class_component") {
     reconcileChildren(filber, filber.stateNode.render());
+  } else if (filber.tag === "function_component") {
+    reconcileChildren(filber, filber.stateNode(filber.props));
   } else {
     reconcileChildren(filber, filber.props.children);
   }

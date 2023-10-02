@@ -10,7 +10,7 @@ const commitAllWork = (filber) => {
     if (item.effectTag === "placement") {
       let fiber = item;
       let parentFiber = item.parent;
-      while (parentFiber.tag === "class_component") {
+      while (parentFiber.tag === "class_component" || parentFiber.tag === "function_component") {
         parentFiber = parentFiber.parent;
       }
       if (fiber.tag === "host_component") {
@@ -71,6 +71,8 @@ const reconcileChildren = (filber, children) => {
 const executeTask = (filber) => {
   if (filber.tag === "class_component") {
     reconcileChildren(filber, filber.stateNode.render());
+  } else if (filber.tag === "function_component") {
+    reconcileChildren(filber, filber.stateNode(filber.props));
   } else {
     reconcileChildren(filber, filber.props.children);
   }
