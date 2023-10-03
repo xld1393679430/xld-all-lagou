@@ -28,7 +28,7 @@ export default function unmountNode(node) {
   if (node.childNodes.length > 0) {
     for (let i = 0; i < node.childNodes.length; i++) {
       unmountNode(node.childNodes[i]);
-	  i--;
+      i--;
     }
   }
 
