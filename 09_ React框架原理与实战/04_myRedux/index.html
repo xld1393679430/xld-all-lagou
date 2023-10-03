@@ -12,6 +12,8 @@
 	<span id="box">0</span>
 	<button id="decrement">-1</button>
 	<script src="./index.js"></script>
+	<script src="./middlewares/logger.js"></script>
+	<script src="./middlewares/thunk.js"></script>
 	<script>
 		const incrementEle = document.getElementById('increment')
 		const decrementEle = document.getElementById('decrement')
@@ -27,21 +29,66 @@
 			}
 		}
 
-		const store = createStore(reducer, 0)
+		function enhancer(createStore) {
+			return function (reducer, initilaState) {
+				let store = createStore(reducer, initilaState)
+				let dispatch = store.dispatch
+
+				function _dispatch(action) {
+					if (typeof action === 'function') {
+						return action(dispatch)
+					}
+					dispatch(action)
+				}
+				return {
+					...store,
+					dispatch: _dispatch
+				}
+			}
+		}
+
+		// // 1，enhance
+		// const store = createStore(reducer, 0, enhancer)
+
+		// 2，中间件
+		const store = createStore(reducer, 0, applyMiddleware(logger, thunk))
+
+		function increment() {
+			return { type: 'increment' }
+		}
+
+		function decrement() {
+			return { type: 'decrement' }
+		}
+
+		const actions = bindActionCreators({
+			increment,
+			decrement,
+		}, store.dispatch)
+
+		console.log(actions, 9999)
 
 		incrementEle.onclick = function () {
-			store.dispatch({ type: 'increment' })
+			// store.dispatch(increment())
+
+			// // 配合 enhance 使用
+			// store.dispatch(function (dispatch) {
+			// 	setTimeout(() => {
+			// 		dispatch(increment())
+			// 	}, 2000)
+			// })
+
+			// 配合bindActionCreators
+			actions.increment();
 		}
 
 		decrementEle.onclick = function () {
-			store.dispatch({ type: 'decrement' })
+			store.dispatch(decrement())
 		}
 
 		store.subscribe(() => {
 			box.innerHTML = store.getState()
 		})
-		console.log(store.getState(), 44444);
-
 	</script>
 </body>
 
