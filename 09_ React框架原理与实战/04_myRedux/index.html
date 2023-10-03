@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<button id="increment">+1</button>
+	<span id="box">0</span>
+	<button id="decrement">-1</button>
+	<script src="./index.js"></script>
+	<script>
+		const incrementEle = document.getElementById('increment')
+		const decrementEle = document.getElementById('decrement')
+		const box = document.getElementById('box')
+		function reducer(state, action) {
+			switch (action.type) {
+				case "increment":
+					return state + 1
+				case "decrement":
+					return state - 1
+				default:
+					return state;
+			}
+		}
+
+		const store = createStore(reducer, 0)
+
+		incrementEle.onclick = function () {
+			store.dispatch({ type: 'increment' })
+		}
+
+		decrementEle.onclick = function () {
+			store.dispatch({ type: 'decrement' })
+		}
+
+		store.subscribe(() => {
+			box.innerHTML = store.getState()
+		})
+		console.log(store.getState(), 44444);
+
+	</script>
+</body>
+
+</html>
