@@ -13,8 +13,8 @@ const Index = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  count: state.count,
+const mapStateToProps = ({ counter }) => ({
+  count: counter.count,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators(counterActions, dispatch);
