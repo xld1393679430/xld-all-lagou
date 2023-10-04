@@ -1,6 +1,13 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
+import { render } from "react-dom";
 import App from "./App";
+import { Provider } from "mobx-react";
+import counter from "./store/counter";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<App />);
+const root = document.getElementById("root");
+render(
+  <Provider counter={counter}>
+    <App />
+  </Provider>,
+  root
+);
