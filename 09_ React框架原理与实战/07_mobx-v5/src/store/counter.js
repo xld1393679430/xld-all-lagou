@@ -1,12 +1,18 @@
-import { action, configure, observable, runInAction } from "mobx";
+import { action, computed, configure, observable, runInAction } from "mobx";
 
 // 通过配置强制程序使用action函数更改应用程序中的状态
 configure({ enforceActions: "observed" });
 
 class Counter {
   @observable count = 0;
+  @observable price = 10;
 
   @observable users = [];
+
+  @computed
+  get totalPrice() {
+    return this.count * this.price
+  }
 
   @action
   increment = () => {
@@ -22,7 +28,7 @@ class Counter {
   @action.bound async getData() {
     const users = await fetch("https://api.github.com/users").then((res) => res.json());
     // 异步action改变observable需要在runInAction回调里操作
-	runInAction(() => {
+    runInAction(() => {
       this.users = users;
     });
   }

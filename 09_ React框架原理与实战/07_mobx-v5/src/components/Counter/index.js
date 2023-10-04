@@ -11,13 +11,18 @@ class Index extends Component {
   }
 
   render() {
-    const { count, users, increment, decrement } = this.props.counter;
+    const { count, users, price, totalPrice, increment, decrement } = this.props.counter;
     const _users = toJS(users);
     return (
       <div>
-        <button onClick={increment}>+1</button>
-        <span>{count}</span>
-        <button onClick={decrement}>-1</button>
+        <button onClick={increment}>count + 1</button>
+        <button onClick={decrement}>count - 1</button>
+        <div>
+          <p>count: {count}</p>
+          <p>price: {price}</p>
+          <p>totalPrice = count * price = {totalPrice}</p>
+        </div>
+
         <hr />
         <ul>
           {_users.map((item) => {
