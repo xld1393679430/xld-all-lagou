@@ -11,7 +11,8 @@ class Index extends Component {
   }
 
   render() {
-    const { count, users, price, totalPrice, increment, decrement } = this.props.counter;
+    const { counter } = this.props;
+    const { count, users, price, username, changeUserName, totalPrice, increment, decrement } = counter;
     const _users = toJS(users);
     return (
       <div>
@@ -20,9 +21,12 @@ class Index extends Component {
         <div>
           <p>count: {count}</p>
           <p>price: {price}</p>
-          <p>totalPrice = count * price = {totalPrice}</p>
+          <p>totalPrice count * price = {totalPrice}</p>
         </div>
 
+        <hr />
+        <input type="text" value={username} onChange={(e) => changeUserName(e.target.value)} />
+        <p>username（输入admin或其他查看效果）： {username}</p>
         <hr />
         <ul>
           {_users.map((item) => {
