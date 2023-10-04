@@ -1,6 +1,14 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const TODOS = "todos";
+
+const getTodos = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([{ title: "任务x" }, { title: "任务y" }]);
+    }, 1000);
+  });
+};
 
 const { reducer: TodosReducer, actions } = createSlice({
   name: TODOS,
@@ -9,9 +17,16 @@ const { reducer: TodosReducer, actions } = createSlice({
     addTodo: (state, action) => {
       state.push(action.payload);
     },
+    setTodos: (state, action) => {
+      action.payload.forEach((todo) => state.push(todo));
+    },
   },
 });
 
-export const { addTodo } = actions;
+export const { addTodo, setTodos } = actions;
+
+export const loadTodos = createAsyncThunk(`${TODOS}/loadTodos`, (payload, { dispatch }) => {
+  getTodos().then((todos) => dispatch(setTodos(todos)));
+});
 
 export default TodosReducer;

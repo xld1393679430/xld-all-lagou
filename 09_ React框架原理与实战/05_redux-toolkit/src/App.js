@@ -5,9 +5,9 @@ import Prepare from "./components/Prepare";
 function App() {
   return (
     <div className="App">
-      {/* <Todos /> */}
+      <Todos />
 
-      <Prepare />
+      {/* <Prepare /> */}
     </div>
   );
 }
