@@ -12,7 +12,6 @@ const getTodos = () => {
 
 export const loadTodos = createAsyncThunk(`${TODOS}/loadTodos`, (payload) => getTodos());
 
-
 const { reducer: TodosReducer, actions } = createSlice({
   name: TODOS,
   initialState: [],
