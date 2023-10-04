@@ -1,6 +1,10 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createEntityAdapter } from "@reduxjs/toolkit";
 
 export const TODOS = "todos";
+
+const todosAdapter = createEntityAdapter()
+
+console.log(todosAdapter.getInitialState(), 99998);
 
 const getTodos = () => {
   return new Promise((resolve) => {
