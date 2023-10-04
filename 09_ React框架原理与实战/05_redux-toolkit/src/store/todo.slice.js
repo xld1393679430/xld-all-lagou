@@ -10,9 +10,13 @@ const getTodos = () => {
   });
 };
 
+export const loadTodos = createAsyncThunk(`${TODOS}/loadTodos`, (payload) => getTodos());
+
+
 const { reducer: TodosReducer, actions } = createSlice({
   name: TODOS,
   initialState: [],
+  // 同步reducer
   reducers: {
     addTodo: (state, action) => {
       state.push(action.payload);
@@ -21,12 +25,14 @@ const { reducer: TodosReducer, actions } = createSlice({
       action.payload.forEach((todo) => state.push(todo));
     },
   },
+  // 异步reducers
+  extraReducers: {
+    [loadTodos.fulfilled]: (state, action) => {
+      action.payload.forEach((todo) => state.push(todo));
+    }
+  }
 });
 
 export const { addTodo, setTodos } = actions;
-
-export const loadTodos = createAsyncThunk(`${TODOS}/loadTodos`, (payload, { dispatch }) => {
-  getTodos().then((todos) => dispatch(setTodos(todos)));
-});
 
 export default TodosReducer;
