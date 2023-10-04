@@ -7,7 +7,6 @@ const { reducer: TodosReducer, actions } = createSlice({
   initialState: [],
   reducers: {
     addTodo: (state, action) => {
-		console.log(111, state, action);
       state.push(action.payload);
     },
   },
