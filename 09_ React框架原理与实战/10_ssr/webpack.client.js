@@ -6,6 +6,6 @@ module.exports = merge(baseConfig, {
   entry: "./src/client/index.js",
   output: {
     path: path.join(__dirname, "public"),
-    filename: "bundle.js",
+    filename: "client.js",
   },
 });
