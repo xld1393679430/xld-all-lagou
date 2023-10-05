@@ -56,9 +56,33 @@ function useEffect(callback, depth) {
   }
 }
 
+function useReducer(reducer, initialState) {
+  const [state, setState] = useState(initialState);
+
+  function dispatch(action) {
+    const newState = reducer(state, action);
+    setState(newState);
+  }
+
+  return [state, dispatch];
+}
+
 const Index = () => {
   const [count, setCount] = useState(0);
   const [age, setAge] = useState(100);
+
+  function reducer(state, action) {
+    switch (action.type) {
+      case "inc":
+        return state + 1;
+      case "dec":
+        return state - 1;
+      default:
+        return state;
+    }
+  }
+
+  const [num, dispatch] = useReducer(reducer, 0);
 
   useEffect(() => {
     console.log("count");
@@ -71,10 +95,14 @@ const Index = () => {
   return (
     <div>
       <p>
-        count: {count} -- age{age}
+        count: {count} -- age{age} - num: {num}
       </p>
       <button onClick={() => setCount(count + 1)}>setCount</button>
       <button onClick={() => setAge(age + 1)}>setAge</button>
+
+      <hr />
+      <button onClick={() => dispatch({ type: "inc" })}>num + 1</button>
+      <button onClick={() => dispatch({ type: "dec" })}>num - 1</button>
     </div>
   );
 };
