@@ -1,8 +1,7 @@
-import Demo from './components/Demo'
-import UseState from './components/UseState'
+import Demo from "./components/Demo";
+import UseState from "./components/UseState";
 
 function App() {
-
   return (
     <div className="App">
       {/* <Demo /> */}

@@ -3,10 +3,15 @@ import App from "../../App";
 
 let state = [],
   setters = [],
-  stateIndex = 0;
+  stateIndex = 0,
+  prevDepths = [],
+  effectIndex = 0;
+
+const getObjectType = (obj) => Object.prototype.toString.call(obj);
 
 function render() {
   stateIndex = 0;
+  effectIndex = 0;
   root.render(<App />);
 }
 
@@ -31,16 +36,45 @@ function useState(initialState) {
   return [value, setValue];
 }
 
+function useEffect(callback, depth) {
+  if (getObjectType(callback) !== "[object Function]") {
+    throw new Error("useEffect第一个参数必须是函数");
+  }
+  if (typeof depth === "undefined") {
+    callback();
+  } else {
+    if (getObjectType(depth) !== "[object Array]") {
+      throw new Error("useEffect第二个参数必须是数组");
+    }
+    const prevDepth = prevDepths[effectIndex];
+    const hasChanged = prevDepth ? depth.some((dep, index) => dep !== prevDepth[index]) : true;
+    if (hasChanged) {
+      callback();
+    }
+    prevDepths[effectIndex] = depth;
+    effectIndex += 1;
+  }
+}
+
 const Index = () => {
   const [count, setCount] = useState(0);
-  const [name, setName] = useState("张三");
+  const [age, setAge] = useState(100);
+
+  useEffect(() => {
+    console.log("count");
+  }, []);
+
+  useEffect(() => {
+    console.log("age");
+  }, []);
+
   return (
     <div>
       <p>
-        count: {count} -- name: {name}
+        count: {count} -- age{age}
       </p>
       <button onClick={() => setCount(count + 1)}>setCount</button>
-      <button onClick={() => setName("李四")}>setName</button>
+      <button onClick={() => setAge(age + 1)}>setAge</button>
     </div>
   );
 };
