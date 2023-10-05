@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 
 const Index = () => {
-  const { values, errors, handleChange, handleSubmit } = useFormik({
+  const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: {
-      username: "张三",
-      password: 123456,
+      username: "",
+      password: "",
     },
     validate: (values) => {
       const errors = {};
@@ -23,22 +22,34 @@ const Index = () => {
       return errors;
     },
     onSubmit: (values) => {
-	  alert(JSON.stringify(values))
+      alert(JSON.stringify(values));
     },
   });
-
-  useEffect(() => {}, []);
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
         <div>
-          <input type="text" name="username" placeholder="username" value={values.username} onChange={handleChange} />
-          <p>{errors.username}</p>
+          <input
+            type="text"
+            name="username"
+            placeholder="username"
+            value={values.username}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          <p>{touched.username && errors.username}</p>
         </div>
         <div>
-          <input type="text" name="password" placeholder="password" value={values.password} onChange={handleChange} />
-          <p>{errors.password}</p>
+          <input
+            type="text"
+            name="password"
+            placeholder="password"
+            value={values.password}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          <p>{touched.password && errors.password}</p>
         </div>
         <div>
           <button type="submit">提交</button>
