@@ -1,15 +1,15 @@
 import { useFormik } from "formik";
-import * as Yup from 'yup'
+import * as Yup from "yup";
 
 const Index = () => {
-  const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
+  const { touched, errors, getFieldProps, handleSubmit } = useFormik({
     initialValues: {
       username: "",
       password: "",
     },
     validationSchema: Yup.object({
-      username: Yup.string().max(15, '用户名长度不能大于15').required('请输入用户名'),
-      password: Yup.string().min(6, '密码长度不能小于6').required('请输入密码')
+      username: Yup.string().max(15, "用户名长度不能大于15").required("请输入用户名"),
+      password: Yup.string().min(6, "密码长度不能小于6").required("请输入密码"),
     }),
     // validate: (values) => {
     //   const errors = {};
@@ -35,25 +35,11 @@ const Index = () => {
     <div>
       <form onSubmit={handleSubmit}>
         <div>
-          <input
-            type="text"
-            name="username"
-            placeholder="username"
-            value={values.username}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
+          <input type="text" placeholder="username" {...getFieldProps("username")} />
           <p>{touched.username && errors.username}</p>
         </div>
         <div>
-          <input
-            type="text"
-            name="password"
-            placeholder="password"
-            value={values.password}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
+          <input type="text" placeholder="password" {...getFieldProps("password")} />
           <p>{touched.password && errors.password}</p>
         </div>
         <div>
