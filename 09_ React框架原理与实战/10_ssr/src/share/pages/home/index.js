@@ -10,6 +10,7 @@ const Index = () => {
 	return (
 		<div>
 			<p>Home</p>
+			<button onClick={() => alert('hello')}>hello</button>
 		</div>
 	)
 }
