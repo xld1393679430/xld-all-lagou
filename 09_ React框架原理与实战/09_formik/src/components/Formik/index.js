@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import * as Yup from 'yup'
 
 const Index = () => {
   const { values, touched, errors, handleChange, handleBlur, handleSubmit } = useFormik({
@@ -6,21 +7,25 @@ const Index = () => {
       username: "",
       password: "",
     },
-    validate: (values) => {
-      const errors = {};
-      if (!values.username) {
-        errors.username = "请输入用户名";
-      } else if (values.username.length > 15) {
-        errors.username = "用户名长度不能大于15";
-      }
+    validationSchema: Yup.object({
+      username: Yup.string().max(15, '用户名长度不能大于15').required('请输入用户名'),
+      password: Yup.string().min(6, '密码长度不能小于6').required('请输入密码')
+    }),
+    // validate: (values) => {
+    //   const errors = {};
+    //   if (!values.username) {
+    //     errors.username = "请输入用户名";
+    //   } else if (values.username.length > 15) {
+    //     errors.username = "用户名长度不能大于15";
+    //   }
 
-      if (!values.password) {
-        errors.password = "请输入密码";
-      } else if (values.password.length < 6) {
-        errors.password = "密码长度不能小于6";
-      }
-      return errors;
-    },
+    //   if (!values.password) {
+    //     errors.password = "请输入密码";
+    //   } else if (values.password.length < 6) {
+    //     errors.password = "密码长度不能小于6";
+    //   }
+    //   return errors;
+    // },
     onSubmit: (values) => {
       alert(JSON.stringify(values));
     },
