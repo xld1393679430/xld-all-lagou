@@ -1,9 +1,13 @@
 import React from "react";
 import { renderToString } from "react-dom/server";
-import Home from "../share/pages/home";
+import { StaticRouter } from "react-router-dom";
+import routes from "../share/routes";
 
-export default () => {
-  const content = renderToString(<Home />);
+export default (req) => {
+
+  const Component = routes.find((item) => item.path === req.path).component;
+  const content = renderToString(<StaticRouter location={req.path}>{<Component />}</StaticRouter>);
+
   return `
   <html>
 	  <head>
