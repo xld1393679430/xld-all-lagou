@@ -5,10 +5,10 @@ function App() {
   return (
     <div className="App">
       {/*  formik 基础用法 */}
-      {/* <Formik /> */}
+      <Formik />
 
       {/* formik 高级用法 使用组件的方式构建表单 */}
-      <FormikComponent /> 
+      {/* <FormikComponent />  */}
     </div>
   );
 }
